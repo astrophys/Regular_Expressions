@@ -1,0 +1,325 @@
+% Compile by directly running 
+%   pdflatex Introduction_to_Python.tex
+%
+%
+%
+%
+%
+\documentclass{beamer}
+\usetheme{Copenhagen}
+\usepackage[utf8]{inputenc}
+\usepackage{times}  % fonts are up to you
+\usepackage{graphics}
+\usepackage{amsmath}
+\usepackage{media9}
+\usepackage{hyperref}
+\usepackage{psfrag}
+\usepackage{pdfpages}
+\usepackage{listings}
+%\usepackage[hyphens]{url}
+
+% https://tex.stackexchange.com/questions/116534/lstlisting-line-wrapping
+%\lstset{
+%  basicstyle=\ttfamily,
+%  columns=fullflexible,
+%  frame=single,
+%  breaklines=true,
+%  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+%}
+
+\hypersetup{%
+  colorlinks=true,% hyperlinks will be black
+  linkbordercolor=red,% hyperlink borders will be red
+  pdfborderstyle={/S/U/W 1}% border style will be underline of width 1pt
+}
+
+\setbeamertemplate{bibliography item}[text]
+\newcommand{\customcite}[1]{\citeauthor{#1}, \citeyear{#1}}
+\newcommand\smallFont{\fontsize{8}{7.2}\selectfont}   %Change font size.
+\newcommand\mCite[1]{[\cite{#1}, \citetitle{#1}]}  %Prints name and title
+\newcommand\FrameText[1]{
+\begin{textblock*}{\paperwidth}(0pt,\textheight)
+	\vspace{1.0cm}
+    \raggedleft \smallFont #1
+\end{textblock*}}
+
+%Get rid of ugly copenhagen default symbol for enumerate
+\setbeamertemplate{enumerate items}[default]   
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}{\raise1.5pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+\setbeamertemplate{itemize subsubitem}{\raise1.5pt\hbox{$\star$}}
+
+
+% Create code text
+% https://tex.stackexchange.com/questions/65291/code-snippet-in-text
+\definecolor{codegray}{gray}{0.9}
+\newcommand{\code}[1]{\colorbox{codegray}{\texttt{#1}}}
+
+
+
+%Information to be included in the title page:
+\title{Regular Expressions}
+\author{Ali Snedden}
+\institute{Nationwide Children's Hospital}
+\date{October 18, 2019}
+ 
+ 
+ 
+\begin{document}
+ 
+\frame{\titlepage}
+
+% Recurring Outline
+\AtBeginSection[]  % "Beamer, do the following at the start of every section"
+{
+\begin{frame}<beamer> 
+\frametitle{Outline} % make a frame titled "Outline"
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\begin{frame}
+\frametitle{Get This Presentation}
+How to get this presentation:
+\bigskip
+\href{https://github.com/astrophys/Regular\_Expressions}{https://github.com/astrophys/Regular\_Expressions}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{How to Connect}
+Windows:
+{\scriptsize
+\begin{itemize}
+    \item Open PuTTY
+    \item Click Window Session $\Rightarrow$ Host Name field : 10.70.250.101
+    \item Click on Connection $\Rightarrow$ SSH $\Rightarrow$ X11, check the box next to ``Enable X11 forwarding"
+    \item Click ``Open" to log in.
+    \item Enter username and password
+    \item Start Xming on Windows
+\end{itemize}
+}
+\bigskip
+
+Mac:
+{\scriptsize
+\begin{itemize}
+    \item Open Terminal (Finder $\Rightarrow$ Utilities $\Rightarrow$ Terminal)
+    \item \code{ssh -X username@10.70.250.101}
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{What are Regular Expressions?}
+Definition
+\begin{itemize}
+    \item A sequence of characters that define a search pattern
+\end{itemize}
+\pause
+Uses
+\begin{itemize}
+    \item Searching large text files
+    \pause
+    \item Complex search and replace in text editors
+    \pause
+    \item Parsing output in linux pipelines
+\end{itemize}
+\pause
+Aliases:
+\begin{itemize}
+    \item regex (pl. regexes)
+    \pause
+    \item regexp
+\end{itemize}
+\pause
+Available in :
+\begin{itemize}
+    \item \code{grep}, \code{egrep}
+    \pause
+    \item \code{emacs}
+    \pause
+    \item \code{vim}
+    \pause
+    \item \code{awk}
+    \pause
+    \item \code{sed}
+    \pause
+    \item \code{Python}
+    \pause
+    \item \code{Perl}
+    \pause
+    \item \code{R}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Regular Expressions}
+Two types of characters
+\begin{itemize}
+    \item Metacharacter : character with a special meaning
+    \begin{itemize}
+        \item \code{.} : wildcard 
+        \pause
+        \item \code{[ ]}: variable matches
+        \pause
+        \item \code{( )}: subexpression which can be recalled later (used in \code{vim} search and replace
+        \pause
+        \item \code{\{ \}}: denotes number of matches
+        \pause
+        \item \code{\^{}} : anchor regex at beginning of line
+        \pause
+        \item \code{\$} : anchor regex at end of line
+    \end{itemize}
+    \pause
+    \item Literal : character with a special meaning
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Gotchya's}
+Syntax isn't 100\% consistent across regex engines
+\begin{itemize}
+    \item Common issue : often need to escape metacharacters and which ones need escaped often differs.
+    \pause
+    \item I often find myself doing little tests to ensure I know how the engine works.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Metacharacter : ``."}
+Wildcard
+Compare :
+\begin{itemize}
+    \item \code{grep -E Texas data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E .exas data/Democracy\_in\_America.txt}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Metacharacter : ``\^{}"}
+Anchors match to beginning of line
+
+Compare :
+\begin{itemize}
+    \item \code{grep -E state data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E \^{}state data/Democracy\_in\_America.txt}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Metacharacter : ``\$"}
+Anchors match to end of line
+
+Compare :
+\begin{itemize}
+    \item \code{grep -E state data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E state\$ data/Democracy\_in\_America.txt}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Metacharacter : ``[ ]"}
+Includes characters contained. 
+
+Compare :
+\begin{itemize}
+    \item \code{grep -E disq data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E dis[qo] data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E dis[a-p] data/Democracy\_in\_America.txt \# Lowercase Letters a-p}   
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Metacharacter : ``[\^{} ]"}
+Excludes characters contained. 
+
+Compare :
+\begin{itemize}
+    \item \code{grep -E disq data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E dis[\^{}tqo] data/Democracy\_in\_America.txt}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Metacharacter : ``{m,n}"}
+Match preceding element at least \code{m}, not more than \code{n} times.
+
+Compare :
+\begin{itemize}
+    \item \code{grep -E as\{2\}a data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E [as]\{4,6\} data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E [as]\{5\} data/Democracy\_in\_America.txt}
+\end{itemize}
+\end{frame}
+
+
+
+
+%\begin{frame}[fragile]
+%\frametitle{Anatomy of a Figure}
+%\begin{picture}(320,250)  %must be related to where it is centered
+%%\put(0, 70){\includegraphics[height=2.5in]{images/GPFS_File.eps}}
+%%\setbeamercolor{background canvas}{bg=}
+%\put(40, 30){\includegraphics[height=3.0in]{images/anatomy_of_a_figure.png}}
+%
+%\put(270, 30){\begin{minipage}[t]{0.7 \linewidth}
+%%\href{https://matplotlib.org/tutorials/introductory/usage.html}{matplotlib.org}
+%{\scriptsize matplotlib.org}  % Not sure why \href doesn't work here
+%\end{minipage}}
+%\end{picture}
+%\end{frame}
+
+
+\begin{frame}
+\frametitle{Homework}
+\begin{itemize}
+    \item Find all lines where the 2nd and 3rd characters are either an 'a' or an 's' and the last word is 'pioneers'
+    \pause
+    \item Find all the lines where either '[Ss]lavery' and freedom occur simultaneously.
+    \pause
+    \item Count the number of times that either 'Indian', 'white' and 'black' occur in the document (hint : look at man page for \code{grep})
+    \pause
+    \item Print out all lines where 'war' or 'wars' is followed by punctuation (i.e. ',', '.', '-')
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Answers}
+\begin{itemize}
+    \item \code{grep -E \^{}.[as]\{2,10\}.\{1,100\}pioneers\$ data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E [Ss]lavery data/Democracy\_in\_America.txt  | grep freedom}
+    \pause
+    \item \code{grep -E -c Indian data/Democracy\_in\_America.txt}
+    \pause
+    \item \code{grep -E -c war[\^{}a-r,t-z\ ][\^{}\ ] data/Democracy\_in\_America.txt}
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+\frametitle{Resources}
+
+\href{https://www.regular-expressions.info/}{https://www.regular-expressions.info}
+
+\href{https://stackoverflow.com/}{Stack Overflow}
+
+\end{frame}
+
+\end{document}
