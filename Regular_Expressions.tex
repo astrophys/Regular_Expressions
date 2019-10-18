@@ -149,7 +149,7 @@ Available in :
 \begin{frame}
 \frametitle{Regular Expressions}
 Two types of characters
-\begin{itemize}
+\begin{enumerate}
     \item Metacharacter : character with a special meaning
     \begin{itemize}
         \item \code{.} : wildcard 
@@ -166,22 +166,23 @@ Two types of characters
     \end{itemize}
     \pause
     \item Literal : character with a special meaning
-\end{itemize}
+\end{enumerate}
 \end{frame}
 
 \begin{frame}
 \frametitle{Gotchya's}
 Syntax isn't 100\% consistent across regex engines
+\pause
 \begin{itemize}
-    \item Common issue : often need to escape metacharacters and which ones need escaped often differs.
+    \item Common issue : need to escape metacharacters and which ones need escaped often differs.
     \pause
-    \item I often find myself doing little tests to ensure I know how the engine works.
+    \item I frequently find myself doing little tests to ensure I know how the engine works.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Metacharacter : ``."}
-Wildcard
+\code{.} : Wildcard
 
 \bigskip
 
@@ -196,7 +197,7 @@ Compare :
 
 \begin{frame}
 \frametitle{Metacharacter : ``\^{}"}
-Anchors match to beginning of line
+\code{\^{}} : Anchors match to beginning of line
 \bigskip
 
 Compare :
@@ -209,7 +210,7 @@ Compare :
 
 \begin{frame}
 \frametitle{Metacharacter : ``\$"}
-Anchors match to end of line
+\code{\$} : Anchors match to end of line
 \bigskip
 
 Compare :
@@ -222,7 +223,7 @@ Compare :
 
 \begin{frame}
 \frametitle{Metacharacter : ``[ ]"}
-Includes characters contained. 
+\code{[ ]} : Includes characters contained. 
 \bigskip
 
 Compare :
@@ -237,7 +238,7 @@ Compare :
 
 \begin{frame}
 \frametitle{Metacharacter : ``[\^{} ]"}
-Excludes characters contained. 
+\code{[\^{} ]} : Excludes characters contained. 
 \bigskip
 
 Compare :
@@ -250,14 +251,14 @@ Compare :
 
 \begin{frame}
 \frametitle{Metacharacter : ``\{m,n\}"}
-Match preceding element at least \code{m}, not more than \code{n} times.
+\code{\{m,n\}} : Match preceding element at least \code{m}, not more than \code{n} times.
 \bigskip
 
 Compare :
 \begin{itemize}
     \item \code{grep -E as\{2\}a data/Democracy\_in\_America.txt}
     \pause
-    \item \code{grep -E [as]\{4,6\} data/Democracy\_in\_America.txt}
+    \item \code{grep -E "[as]\{4,6\}" data/Democracy\_in\_America.txt}
     \pause
     \item \code{grep -E [as]\{5\} data/Democracy\_in\_America.txt}
 \end{itemize}
@@ -266,15 +267,20 @@ Compare :
 \begin{frame}[fragile]
 \frametitle{Metacharacter : ( ) }
 \begingroup
-Denotes sub expression that can be recalled later.
+\code{( )} : Denotes sub expression that can be recalled later.
+
 \bigskip
 
-In vim consider the fixing corrupted file (see \code{data/corrupted.txt})
+In \code{vim}, fix corrupted file (see \code{data/corrupted.txt}):
+\bigskip
+
+Solution (in command mode):
 \begin{lstlisting}[backgroundcolor = \color{codegray}, language = Python, showstringspaces=false, breaklines=true]
 :%s/\([0-9]\.[0-9]\{3\}e[+-][0-9]\{2\}\)\([0-9]\.[0-9]\{3\}e[+-]\)/\1 \2/gc
 \end{lstlisting}
 \endgroup
 
+\scriptsize
 \begin{itemize}
     \item \code{\%s} : denotes search and replace command in \code{vim}
     \pause
@@ -298,13 +304,13 @@ In vim consider the fixing corrupted file (see \code{data/corrupted.txt})
 \begin{frame}
 \frametitle{Homework}
 \begin{enumerate}
-    \item Find all lines where the 2nd and 3rd characters are either an 'a' or an 's' and the last word is 'pioneers'
+    \item Find all lines where the 2nd and 3rd characters are either an `a' or an `s' and the last word is `pioneers'
     \pause
-    \item Find all the lines where either '[Ss]lavery' and freedom occur simultaneously.
+    \item Find all the lines where either `[Ss]lavery' and freedom occur simultaneously.
     \pause
-    \item Count the number of times that either 'Indian' occur in the document (hint : look at man page for \code{grep})
+    \item Count the number of times that `Ohio' occurs in the document (hint : look at man page for \code{grep})
     \pause
-    \item Print out all lines where 'war' or 'wars' is followed by punctuation (i.e. ',', '.', '-')
+    \item Print out all lines where `war' or `wars' is followed by punctuation (i.e. `,', `.', `-')
 \end{enumerate}
 \end{frame}
 
@@ -330,7 +336,7 @@ In vim consider the fixing corrupted file (see \code{data/corrupted.txt})
     \pause
     \item \code{grep -E [Ss]lavery data/Democracy\_in\_America.txt  | grep freedom}
     \pause
-    \item \code{grep -E -c Indian data/Democracy\_in\_America.txt}
+    \item \code{grep -E -c Ohio data/Democracy\_in\_America.txt}
     \pause
     \item \code{grep -E -c war[\^{}a-r,t-z\ ][\^{}\ ] data/Democracy\_in\_America.txt}
 \end{enumerate}
